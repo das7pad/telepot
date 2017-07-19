@@ -75,9 +75,11 @@ class MessageLoop(object):
                                      lambda update:
                                          self._handle(_extract_message(update)[1]))
 
-        self._bot.loop.create_task(updatesloop.run_forever(*args, **kwargs))
+        task = self._bot.loop.create_task(
+            updatesloop.run_forever(*args, **kwargs))
 
         self._bot.scheduler.on_event(self._handle)
+        return task
 
 
 class Webhook(object):
