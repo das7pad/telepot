@@ -35,12 +35,13 @@ def _proxy_kwargs():
     else:
         raise RuntimeError("_proxy has invalid length")
 
-def _close_pools():
-    global _pools
-    for s in _pools.values():
-        s.close()
 
-atexit.register(_close_pools)
+async def close_pools():
+    """Close the global connection pools"""
+    global _pools
+    for session in _pools.values():
+        await session.close()
+
 
 def _create_onetime_pool():
     return aiohttp.ClientSession(
@@ -153,7 +154,7 @@ async def request(req, **user_kw):
 
     finally:
         if cleanup:
-            cleanup()  # e.g. closing one-time session
+            await cleanup()  # e.g. closing one-time session
 
 def download(req):
     session = _create_onetime_pool()
