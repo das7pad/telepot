@@ -43,9 +43,12 @@ else:
     cmdclass['install_lib'] = nocompile_async
 
 # Parse version
-with open(path.join(here, 'telepot', '__init__.py')) as f:
-    m = re.search('^__version_info__ *= *\(([0-9]+), *([0-9]+)\)', f.read(), re.MULTILINE)
-    version = '.'.join(m.groups())
+with open(path.join(here, 'telepot', '__init__.py')) as reader:
+    version_line = re.search("__version__ = '(?P<version>.*)'", reader.read())
+
+if version_line is None:
+    raise RuntimeError('Can not find version.')
+version = version_line.group('version')
 
 
 setup(
