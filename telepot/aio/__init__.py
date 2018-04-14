@@ -59,6 +59,10 @@ class Bot(_BotBase):
                                               'inline_query': helper._create_invoker(self, 'on_inline_query'),
                                               'chosen_inline_result': helper._create_invoker(self, 'on_chosen_inline_result')})
 
+    @staticmethod
+    async def close():
+        await api.close_pools()
+
     @property
     def loop(self):
         return self._loop
